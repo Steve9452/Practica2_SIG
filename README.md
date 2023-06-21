@@ -8,4 +8,4 @@
 
 ## Visor del mapa 
 
-![[Map.png]]
+![Map.png](./Map.png)
