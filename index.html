@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet</title>
+    <link rel="stylesheet" href="./leaflet.css">
+    <script src="./leaflet.js"></script>
+    <style>
+        #map {
+            height: 1060px;
+        }
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(0, 9, 88, 0.788);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+}
+        .info h2 {
+            margin: 0 0 5px;
+            color: #ffffff;
+        }
+        .info img{
+            width: 40px;
+            height: 50px;
+        }
+        .legend{
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(0, 9, 88, 0.788);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;            
+        }
+        #imgleg{
+            width: 30px;
+            height: 35px;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([13.6801977, -89.235793], 15);
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        
+        var map2 = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+            layers: 'chronicles:Paradas Transporte Colectivo AMSS',
+            format: 'image/png',
+            transparent: true,
+            version: '1.1.0',
+            
+        }).addTo(map);
+        
+        var map3 = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+            layers: 'chronicles:Entradas_buffer',
+            format: 'image/png',
+            transparent: true,
+            version: '1.1.0',
+            
+        }).addTo(map);
+
+//	
+
+        var map4 = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+            layers: 'chronicles:Entradas_uca',
+            format: 'image/png',
+            transparent: true,
+            version: '1.1.0',
+            
+        }).addTo(map);
+
+        var map5 = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+            layers: 'chronicles:Aeropuerto',
+            format: 'image/png',
+            transparent: true,
+            version: '1.1.0',
+            
+        }).addTo(map);
+
+        //chronicles:red_vial
+
+        var map6 = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+            layers: 'chronicles:red_vial',
+            format: 'image/png',
+            transparent: true,
+            version: '1.1.0',
+            
+        }).addTo(map);
+
+
+        
+
+
+        var baseMaps = {
+            "OpenStreetMap": osm
+        };
+
+        var overlayMaps = {
+            "Paradas de Bus": map2,
+            "Rutas de Bus": map3,
+            "Entradas a la UCA": map4,
+            "Aeropuertos": map5,
+            "Red Vial": map6
+        };
+
+
+        var title = L.control();
+        title.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info');
+            div.innerHTML += '<h2>VMS Ministerio de transporte- UCA</h2> <img  src="./logo_uca.jpg"/> Equipo - Chronicles - Practica 2';
+        return div;
+        };
+        
+        title.addTo(map);
+
+
+var legend = L.control({position: 'bottomright'});
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'legend');
+    div.innerHTML += '<img id="imgleg"  src="./301-3010488_our-client-base-bus-stop-sign-vector.png" alt="legend" width="50" height="60"> Parada de Bus <br>';
+    // div.innerHTML += '<img src="http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=chronicles:Paradas+Transporte+Colectivo+AMSS" alt="legend" width="101" height="120">';
+    div.innerHTML += '<img id="imgleg" src="http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=chronicles:Entradas_buffer" alt="legend" width="101" height="120">Buffer Entradas a la UCA <br>';
+    div.innerHTML += '<img id="imgleg" src="http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=chronicles:Entradas_uca" alt="legend" width="101" height="120">Entradas a la UCA <br>';
+    div.innerHTML += '<img id="imgleg" src="http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=chronicles:red_vial" alt="legend" width="101" height="120">Red Vial<br>'; 
+    div.innerHTML += '<img id="imgleg" src="http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=chronicles:Aeropuerto" alt="legend" width="101" height="120">Aeropuertos<br>';   
+    return div;
+    };
+    legend.addTo(map);
+
+
+
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+        
+    </script>
+</body>
+
+</html>
+
